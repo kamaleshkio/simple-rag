@@ -1,0 +1,9 @@
+langchain
+langchain_community
+langchain_huggingface
+langchain_openai
+pypdf
+chromadb
+langsmith
+streamlit
+langchain_openai
