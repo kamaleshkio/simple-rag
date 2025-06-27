@@ -7,7 +7,7 @@ load_dotenv()
 import streamlit as st
 import tempfile
 
-from run_rag import run_rag_pipeline
+from run_rag import get_llm_chain
 
 
 
@@ -24,7 +24,7 @@ if query:
     with st.spinner("Running RAG pipeline..."):
 
         try:
-            answer = run_rag_pipeline(
+            answer = get_llm_chain(
                 pdf_path="components/Bakthi.pdf",
                 query=query,
                 openai_api_key=api_key,

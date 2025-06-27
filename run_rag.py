@@ -1,39 +1,23 @@
-import os
-import streamlit as st
-from run_rag import run_rag_pipeline
+from langchain_openai import ChatOpenAI
+from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
 
-# Load environment variables from .env (e.g. OPENROUTER_API_KEY)
-from dotenv import load_dotenv
-load_dotenv()
+def get_llm_chain(api_key, model_name = "mistralai/mistral-7b-instruct"):
+    llm = ChatOpenAI(
+        openai_api_key = api_key,
+        openai_api_base = "https://openrouter.ai/api/v1",
+        model_name = model_name,
+        temperature = 0.8,
+    )
 
-# Set Streamlit config directory (for metrics, etc.)
-streamlit_config_dir = "/app/.streamlit"
-os.environ["STREAMLIT_CONFIG_DIR"] = streamlit_config_dir
-os.makedirs(streamlit_config_dir, exist_ok=True)
 
-# Predefined settings
-API_KEY = os.getenv("OPENROUTER_API_KEY")
-MODEL_NAME = "mistralai/mistral-7b-instruct"
-PDF_PATH = "components/Bakthi.pdf"
+    prompt = ChatPromptTemplate("""
+    use the following context to answer the question.
+    <context>
+    {context}                            
+    </context>
+    Question: {input}
+    """
+    )
 
-# Streamlit UI setup
-st.set_page_config(page_title="RAG Q&A App", layout="wide")
-st.title("📘 RAG Q&A using OpenRouter + Langchain")
-
-query = st.text_input("Ask a question based on the PDF:")
-
-if query:
-    with st.spinner("Generating answer..."):
-        try:
-            answer = run_rag_pipeline(
-                pdf_path=PDF_PATH,
-                query=query,
-                openai_api_key=API_KEY,
-                model_name=MODEL_NAME
-            )
-            st.subheader("🧠 Answer:")
-            st.markdown(answer)
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
-else:
-    st.info("Please enter your question above.")
+    return create_stuff_documents_chain(llm, prompt)
