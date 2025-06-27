@@ -27,7 +27,7 @@ if query:
             answer = get_llm_chain(
                 pdf_path="components/Bakthi.pdf",
                 query=query,
-                openai_api_key=api_key,
+                openai_api_key="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",
                 model_name=model_name
             )
             st.subheader("📌 Answer:")
