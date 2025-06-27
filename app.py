@@ -19,7 +19,7 @@ if query:
 
         try:
             answer = run_rag_pipeline(
-                pdf_path="Bakthi.pdf",
+                pdf_path="components/Bakthi.pdf",
                 query=query,
                 openai_api_key=api_key,
                 model_name=model_name
