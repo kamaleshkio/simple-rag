@@ -14,13 +14,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+api_key = os.environ["OPENROUTER_API_KEY"]
+
 @traceable(name = "rag-test")
-def run_rag_pipeline(pdf_path, query, openai_api_key, model_name = "mistralai/mistral-7b-instruct" ):
+def run_rag_pipeline(pdf_path, query, api_key, model_name = "mistralai/mistral-7b-instruct" ):
     docs = load_pdf(pdf_path)
     chunks = split_docs(docs)
     embedding_model = get_embedding_model()
     vectore_store = creat_vectorstore(chunks, embedding_model)
     retrieved = retrieve_docs(vectorstore=vectore_store, query=query)
-    chain = get_llm_chain(openai_api_key, model_name=model_name)
+    chain = get_llm_chain(api_key, model_name=model_name)
     result = chain.invoke({"context": retrieved, "input": query})
     return result
