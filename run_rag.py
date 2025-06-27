@@ -1,23 +1,26 @@
-from langchain_openai import ChatOpenAI
-from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
+import os 
 
-def get_llm_chain(api_key, model_name = "mistralai/mistral-7b-instruct"):
-    llm = ChatOpenAI(
-        openai_api_key = api_key,
-        openai_api_base = "https://openrouter.ai/api/v1",
-        model_name = model_name,
-        temperature = 0.8,
-    )
+from components.load_pdf import load_pdf
+from components.split_docs import split_docs
+from components.embede_model import get_embedding_model
+from components.vector_store import creat_vectorstore
+from components.retrieval import retrieve_docs
+from components.llm_chain import get_llm_chain
 
 
-    prompt = ChatPromptTemplate("""
-    use the following context to answer the question.
-    <context>
-    {context}                            
-    </context>
-    Question: {input}
-    """
-    )
+from langsmith import traceable
 
-    return create_stuff_documents_chain(llm, prompt)
+from dotenv import load_dotenv
+
+load_dotenv()
+
+@traceable(name = "rag-test")
+def run_rag_pipeline(query, openai_api_key, model_name = "mistralai/mistral-7b-instruct" ):
+    docs = load_pdf("components/Bakthi.pdf")
+    chunks = split_docs(docs)
+    embedding_model = get_embedding_model()
+    vectore_store = creat_vectorstore(chunks, embedding_model)
+    retrieved = retrieve_docs(vectorstore=vectore_store, query=query)
+    chain = get_llm_chain(openai_api_key, model_name=model_name)
+    result = chain.invoke({"context": retrieved, "input": query})
+    return result
