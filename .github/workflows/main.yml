@@ -35,6 +35,12 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update && sudo apt-get install git-lfs -y
+          git lfs install
+
 
       - name: Force Push to Hugging Face (One-Way Sync)
         env:
