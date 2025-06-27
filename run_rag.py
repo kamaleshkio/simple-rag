@@ -10,9 +10,6 @@ from components.llm_chain import get_llm_chain
 
 from langsmith import traceable
 
-from dotenv import load_dotenv
-
-load_dotenv()
 
 @traceable(name = "rag-test")
 def run_rag_pipeline(query, openai_api_key, model_name = "mistralai/mistral-7b-instruct" ):
