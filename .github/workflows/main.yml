@@ -44,5 +44,5 @@ jobs:
           git config user.name "Kamalesh"
           git remote add hf https://Kamaleshbaskaran:${HF_TOKEN}@huggingface.co/spaces/Kamaleshbaskaran/test-rag
           git fetch hf main
-          git pull hf main --rebase
-          git push hf HEAD:main
+          git rebase hf/main
+          git push hf main
