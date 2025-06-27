@@ -1,9 +1,10 @@
 langchain
+langchain_openai
+langchain_core
 langchain_community
 langchain_huggingface
-langchain_openai
 pypdf
 chromadb
 langsmith
 streamlit
-langchain_openai
+
