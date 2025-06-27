@@ -1,28 +1,39 @@
-import os 
+import os
+import streamlit as st
+from run_rag import run_rag_pipeline
 
-from components.load_pdf import load_pdf
-from components.split_docs import split_docs
-from components.embede_model import get_embedding_model
-from components.vector_store import creat_vectorstore
-from components.retrieval import retrieve_docs
-from components.llm_chain import get_llm_chain
-
-
-from langsmith import traceable
-
+# Load environment variables from .env (e.g. OPENROUTER_API_KEY)
 from dotenv import load_dotenv
-
 load_dotenv()
 
-api_key = os.environ["OPENROUTER_API_KEY"]
+# Set Streamlit config directory (for metrics, etc.)
+streamlit_config_dir = "/app/.streamlit"
+os.environ["STREAMLIT_CONFIG_DIR"] = streamlit_config_dir
+os.makedirs(streamlit_config_dir, exist_ok=True)
 
-@traceable(name = "rag-test")
-def run_rag_pipeline(pdf_path, query, api_key, model_name = "mistralai/mistral-7b-instruct" ):
-    docs = load_pdf(pdf_path)
-    chunks = split_docs(docs)
-    embedding_model = get_embedding_model()
-    vectore_store = creat_vectorstore(chunks, embedding_model)
-    retrieved = retrieve_docs(vectorstore=vectore_store, query=query)
-    chain = get_llm_chain(api_key, model_name=model_name)
-    result = chain.invoke({"context": retrieved, "input": query})
-    return result
+# Predefined settings
+API_KEY = os.getenv("OPENROUTER_API_KEY")
+MODEL_NAME = "mistralai/mistral-7b-instruct"
+PDF_PATH = "components/Bakthi.pdf"
+
+# Streamlit UI setup
+st.set_page_config(page_title="RAG Q&A App", layout="wide")
+st.title("📘 RAG Q&A using OpenRouter + Langchain")
+
+query = st.text_input("Ask a question based on the PDF:")
+
+if query:
+    with st.spinner("Generating answer..."):
+        try:
+            answer = run_rag_pipeline(
+                pdf_path=PDF_PATH,
+                query=query,
+                openai_api_key=API_KEY,
+                model_name=MODEL_NAME
+            )
+            st.subheader("🧠 Answer:")
+            st.markdown(answer)
+        except Exception as e:
+            st.error(f"❌ Error: {e}")
+else:
+    st.info("Please enter your question above.")
