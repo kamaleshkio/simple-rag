@@ -24,7 +24,11 @@ if query:
     with st.spinner("Running RAG pipeline..."):
 
         try:
+<<<<<<< HEAD
             answer = run_rag_pipeline(
+=======
+            answer = get_llm_chain(
+>>>>>>> 830b25b5b13e6c7d9b4fa9e50cc8610b8c19feac
                 query=query,
                 openai_api_key="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",
                 model_name=model_name
