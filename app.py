@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,7 +8,7 @@ os.makedirs("/app/.streamlit", exist_ok=True)
 
 import streamlit as st
 import tempfile
-import os
+
 from run_rag import run_rag_pipeline
 
 
