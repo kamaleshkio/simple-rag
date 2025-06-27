@@ -3,8 +3,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ["STREAMLIT_CONFIG_DIR"] = "/app/.streamlit"
-os.makedirs("/app/.streamlit", exist_ok=True)
 
 import streamlit as st
 import tempfile
