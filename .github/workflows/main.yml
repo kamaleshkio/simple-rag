@@ -23,7 +23,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          tags: kamaleshbaskaran/simple-rag:latest
+          tags: kamaleshbaskaran/streamlit-app:latest
 
   sync-to-hub:
     name: Sync to Hugging Face Hub
@@ -36,13 +36,11 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Configure Git and Sync with Hugging Face
+      - name: Force Push to Hugging Face (One-Way Sync)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git config user.email "kamalehsbaskran4310@gmail.com"
           git config user.name "Kamalesh"
           git remote add hf https://Kamaleshbaskaran:${HF_TOKEN}@huggingface.co/spaces/Kamaleshbaskaran/test-rag
-          git fetch hf main
-          git rebase hf/main
-          git push hf main --force
+          git push hf HEAD:main --force
