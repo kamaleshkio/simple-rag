@@ -1,9 +1,16 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
+os.environ["STREAMLIT_CONFIG_DIR"] = "/app/.streamlit"
+os.makedirs("/app/.streamlit", exist_ok=True)
+
 import streamlit as st
 import tempfile
 import os
 from run_rag import run_rag_pipeline
 
-from dotenv import load_dotenv
+
 
 api_key = os.environ["OPENROUTER_API_KEY"]
 
