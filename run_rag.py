@@ -13,7 +13,7 @@ from langsmith import traceable
 
 @traceable(name = "rag-test")
 def run_rag_pipeline(query, openai_api_key, model_name = "mistralai/mistral-7b-instruct" ):
-    docs = load_pdf("components/Bakthi.pdf")
+    docs = load_pdf()#file or SQL configuration
     chunks = split_docs(docs)
     embedding_model = get_embedding_model()
     vectore_store = creat_vectorstore(chunks, embedding_model)
