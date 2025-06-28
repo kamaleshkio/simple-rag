@@ -7,4 +7,4 @@ pypdf
 chromadb
 langsmith
 streamlit
-
+bs4
